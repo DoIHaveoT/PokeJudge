@@ -1,13 +1,6 @@
+streamlit
+tensorflow
+numpy
+pillow
+gdown
 
-streamlit
-tensorflow
-numpy
-pillow
-gdown
-=======
-streamlit
-tensorflow
-numpy
-pillow
-gdown
->>>>>>> 9683d231f5203285934503974c930f90748f7a40
