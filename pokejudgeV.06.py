@@ -5,6 +5,27 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
+import os
+
+def increment_counter():
+    count_file = "visit_count.txt"
+
+    if not os.path.exists(count_file):
+        with open(count_file, "w") as f:
+            f.write("1")
+            return 1
+    else:
+        with open(count_file, "r+") as f:
+            count = int(f.read()) + 1
+            f.seek(0)
+            f.write(str(count))
+            f.truncate()
+            return count
+
+visit_number = increment_counter()
+
+
+
 # Download model from Google Drive if not already present
 model_path = "pokejudge_v06_final.h5"
 if not os.path.exists(model_path):
