@@ -46,4 +46,5 @@ if uploaded_file is not None:
 
     grade = index_to_label.get(predicted_class, "Unknown")
 
-    st.markdown(f"### 🧠
+    st.markdown(f"### 🧠 Predicted Grade: **{grade}**")
+    st.markdown(f"#### Confidence: {confidence:.2f}%")
