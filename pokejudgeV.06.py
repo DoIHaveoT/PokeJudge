@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing import image
 # Download model from Google Drive if not already present
 model_path = "pokejudge_v06_final.h5"
 if not os.path.exists(model_path):
-    file_id = "1pIuP9XBlYIQ7HS50H6WoGJxnMKPbpgSx"  # your actual file ID
+    file_id = "1a6tTm4xxYLSkVvrvW_NCJ3QZeHJPWFv0"  # your actual file ID
     url = f"https://drive.google.com/uc?id={file_id}"
     gdown.download(url, model_path, quiet=False)
 
