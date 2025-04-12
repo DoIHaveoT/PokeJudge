@@ -123,6 +123,7 @@ index_to_label = {
     5: '9',
     6: '9.5'
 }
+# Redeploy trigger for Streamlit - no logic change
 
 # Streamlit UI
 st.markdown(f"👥 You are visitor **#{visit_number}**")
