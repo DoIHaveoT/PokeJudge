@@ -49,7 +49,10 @@ index_to_label = {
 }
 
 # Streamlit UI
-st.markdown(f"👥 You are visitor **#{visit_number}**")
+# Display visitor count in the sidebar
+with open("visit_count.txt", "r") as f:
+    count = f.read()
+    st.sidebar.markdown(f"👀 Visitors: **{count}**")
 
 st.title("PokeJudge v0.7")
 st.subheader("Upload a Pokémon card image to get an AI-generated grade")
