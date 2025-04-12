@@ -1,12 +1,21 @@
+import os
+import gdown
 import streamlit as st
+import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-import numpy as np
 
-# Load model
-model = load_model("pokejudge_v06_final.h5")
+# Download model from Google Drive if not already present
+model_path = "pokejudge_v06_final.h5"
+if not os.path.exists(model_path):
+    file_id = "1pIuP9XBlYIQ7HS50H6WoGJxnMKPbpgSx"  # your actual file ID
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, model_path, quiet=False)
 
-# Label mapping (based on training class indices)
+# Load the model after it’s downloaded
+model = load_model(model_path)
+
+# Label mapping (based on your training folder order)
 index_to_label = {
     0: '10',
     1: '7',
@@ -17,15 +26,7 @@ index_to_label = {
     6: '9.5'
 }
 
-import os
-import gdown
-
-model_path = "pokejudge_v06_final.h5"
-if not os.path.exists(model_path):
-    file_id = "1pIuP9XBlYIQ7HS50H6WoGJxnMKPbpgSx"
-    gdown.download(f"https://drive.google.com/uc?id={file_id}", model_path, quiet=False)
-
-
+# Streamlit UI
 st.set_page_config(page_title="PokeJudge v0.6", layout="centered")
 st.title("PokeJudge v0.6")
 st.subheader("Upload a Pokémon card image to get an AI-generated grade")
@@ -45,5 +46,4 @@ if uploaded_file is not None:
 
     grade = index_to_label.get(predicted_class, "Unknown")
 
-    st.markdown(f"### 🧠 Predicted Grade: **{grade}**")
-    st.markdown(f"#### Confidence: {confidence:.2f}%")
+    st.markdown(f"### 🧠
