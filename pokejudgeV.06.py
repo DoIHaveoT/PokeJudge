@@ -59,8 +59,19 @@ st.subheader("Upload a Pokémon card image to get an AI-generated grade")
 uploaded_file = st.file_uploader("Choose a card image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    img = image.load_img(uploaded_file, target_size=(224, 224))
-    st.image(img, caption="Uploaded Card", use_column_width=True)
+from PIL import Image  # put this at the top if not already there
+
+if uploaded_file is not None:
+    # Show full-res preview
+    display_img = Image.open(uploaded_file)
+    st.image(display_img, caption="Uploaded Card", width=350)
+
+    # Resize for model
+    model_img = image.load_img(uploaded_file, target_size=(224, 224))
+    img_array = image.img_to_array(model_img)
+    img_array = np.expand_dims(img_array, axis=0) / 255.0
+
+
 
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0) / 255.0
