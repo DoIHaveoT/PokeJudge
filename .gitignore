@@ -1,1 +1,29 @@
 *.h5 
+# 🧠 Ignore trained model files
+*.h5
+
+# 🔢 Ignore local visitor counter
+visit_count.txt
+
+# 🐍 Ignore Python cache and virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+
+# 🖼 Ignore accidental image dumps or screenshots
+*.png
+*.jpg
+*.jpeg
+
+# 💻 OS junk
+.DS_Store
+Thumbs.db
+
+# 📦 Package management leftovers
+*.egg-info/
+*.egg
+dist/
+build/
