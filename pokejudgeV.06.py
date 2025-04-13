@@ -148,4 +148,4 @@ if uploaded_file is not None:
 
     st.markdown(f"### 🧠 Predicted Grade: **{grade}**")
     st.markdown(f"#### Confidence: {confidence:.2f}%")
->>>>>>> 9683d231f5203285934503974c930f90748f7a40
+
