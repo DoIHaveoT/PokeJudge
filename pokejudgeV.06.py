@@ -1,5 +1,6 @@
 import os
 import gdown
+import time
 import streamlit as st
 import numpy as np
 from PIL import Image
@@ -8,6 +9,25 @@ from tensorflow.keras.preprocessing import image
 
 # Streamlit setup
 st.set_page_config(page_title="PokeJudge v0.7", layout="centered")
+
+# Rate limiting (max 10 requests/hour)
+RATE_LIMIT = 10
+RATE_WINDOW = 3600  # seconds in one hour
+rate_file = "usage_log.txt"
+
+def is_rate_limited():
+    if not os.path.exists(rate_file):
+        return False
+    with open(rate_file, "r") as f:
+        timestamps = [float(ts.strip()) for ts in f.readlines()]
+    now = time.time()
+    # Keep only timestamps from the last hour
+    recent = [ts for ts in timestamps if now - ts < RATE_WINDOW]
+    return len(recent) >= RATE_LIMIT
+
+def log_usage():
+    with open(rate_file, "a") as f:
+        f.write(str(time.time()) + "\n")
 
 # Visitor counter
 def increment_counter():
@@ -57,24 +77,25 @@ with open("visit_count.txt", "r") as f:
 st.title("PokeJudge v0.7")
 st.subheader("Upload a Pokémon card image to get an AI-generated grade")
 
-uploaded_file = st.file_uploader("Choose a card image...", type=["jpg", "jpeg", "png"])
+if is_rate_limited():
+    st.error("🚫 Rate limit reached! Please wait an hour before submitting more cards.")
+else:
+    uploaded_file = st.file_uploader("Choose a card image...", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None:
-    # Show full-res preview
-    display_img = Image.open(uploaded_file)
-    st.image(display_img, caption="Uploaded Card", use_column_width=True)
+    if uploaded_file is not None:
+        display_img = Image.open(uploaded_file)
+        st.image(display_img, caption="Uploaded Card", width=350)
 
-    # Resize for model
-    model_img = image.load_img(uploaded_file, target_size=(224, 224))
-    img_array = image.img_to_array(model_img)
-    img_array = np.expand_dims(img_array, axis=0) / 255.0
+        model_img = image.load_img(uploaded_file, target_size=(224, 224))
+        img_array = image.img_to_array(model_img)
+        img_array = np.expand_dims(img_array, axis=0) / 255.0
 
-    # Predict
-    pred = model.predict(img_array)
-    predicted_class = int(np.argmax(pred))
-    confidence = float(np.max(pred)) * 100
-    grade = index_to_label.get(predicted_class, "Unknown")
+        pred = model.predict(img_array)
+        predicted_class = int(np.argmax(pred))
+        confidence = float(np.max(pred)) * 100
+        grade = index_to_label.get(predicted_class, "Unknown")
 
-    # Output
-    st.markdown(f"### 🧠 Predicted Grade: **{grade}**")
-    st.markdown(f"#### Confidence: {confidence:.2f}%")
+        log_usage()
+
+        st.markdown(f"### 🧠 Predicted Grade: **{grade}**")
+        st.markdown(f"#### Confidence: {confidence:.2f}%")
